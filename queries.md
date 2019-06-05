@@ -32,5 +32,19 @@ AS orderTotals
 FROM Customers
 ORDER BY orderTotals DESC;
 ## list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
+SELECT City,
+(SELECT COUNT(*) 
+ FROM Orders
+ WHERE Customers.CustomerID = Orders.CustomerID)
+AS orderTotals
+FROM Customers
+WHERE orderTotals > 0
+GROUP BY City
+ORDER BY City;
 
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
+
+// DELETE if  CustomerID DOES NOT EXIST in both Customers and Orders  !!!!
+DELETE FROM Customers 
+WHERE NOT EXISTS 
+( SELECT * FROM Orders WHERE Customers.CustomerID=Orders.CustomerID );
