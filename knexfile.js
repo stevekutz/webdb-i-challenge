@@ -1,3 +1,6 @@
+// KEEP in root
+
+
 module.exports = {
   development: {
     client: 'sqlite3',

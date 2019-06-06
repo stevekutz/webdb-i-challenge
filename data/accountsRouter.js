@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
 });
 
 // ADD some account info
-  // ADD new post 
   router.post('/', async (req, res) => {
     
     const newAccount = req.body;  
@@ -31,12 +30,36 @@ router.get('/', async (req, res) => {
         res.status(500).json({
           error: 'There was an error while saving the account to the database',
         });
-      }
- 
-    
+      }   
 });
 
 
+// GET an account by Id
+router.get('/:id', checkID, async(req, res) => {
+    res.status(200).json(req.accountWithID)
+});
+
+
+// custom  Middleware for verifying id  !!!!
+async function checkID(req, res, next) {
+    const {id} = req.params;
+    const accountWithID = await Accounts.findById(id);
+
+    try {
+        if(accountWithID) {
+            req.accountWithID = accountWithID;
+            next();
+        } else {
+            res.status(404).json({
+                message: `The account with id ${id} is not registered in the database`
+            })
+        }
+    } catch {
+        res.status(500).json({
+            message: 'Error retrieving the account info from CheckID custom middleware',
+          });
+    }
+}
 
 
 
