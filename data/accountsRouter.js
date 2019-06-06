@@ -27,9 +27,17 @@ router.get('/', async (req, res) => {
         res.status(201).json(newAccount);
       } catch (error) {
         console.log(error);
-        res.status(500).json({
-          error: 'There was an error while saving the account to the database',
-        });
+        console.log(">>>>>  errno is", error.errno)
+        
+        if(error.errno === 19) {
+            res.status(451).json({
+                error: `That account name has already been taken`
+            })
+        } else {
+            res.status(500).json({
+                error: 'There was an error while saving the account to the database',
+              }); 
+        }
       }   
 });
 
@@ -38,6 +46,38 @@ router.get('/', async (req, res) => {
 router.get('/:id', checkID, async(req, res) => {
     res.status(200).json(req.accountWithID)
 });
+
+// DELETE by id
+router.delete('/:id', checkID, async(req, res) => {
+    const {id} = req.params;
+
+    try {
+        const totalAccounts = await Accounts.remove(id);
+        
+        if(totalAccounts > 0) {
+            res.status(200).json({
+                message: ` Account with id ${id} has been removed`
+            })
+        } else {
+            res.status(404).json({
+                message: ` DELETE ERR - should never be seen`
+            });
+        }
+
+    } catch (error) {
+        console.log(error.errno);
+   
+        
+        res.status(500).json({
+          error: 'There was an error DELETING the account from the database',
+        });
+      } 
+
+});
+
+
+
+
 
 
 // custom  Middleware for verifying id  !!!!
