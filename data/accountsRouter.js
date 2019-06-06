@@ -66,8 +66,7 @@ router.delete('/:id', checkID, async(req, res) => {
 
     } catch (error) {
         console.log(error.errno);
-   
-        
+         
         res.status(500).json({
           error: 'There was an error DELETING the account from the database',
         });
@@ -76,8 +75,31 @@ router.delete('/:id', checkID, async(req, res) => {
 });
 
 
+// UPDATED by id
+router.put('/:id', checkID, async(req, res) => {
+    const {id} = req.params;
+    const updatedAccount = req.body;
 
+    try {
+        const accountUpdateAttempt = await Accounts.update(id, updatedAccount);
 
+        if(accountUpdateAttempt) {
+            res.status(200).json(updatedAccount);
+        } else {
+            res.status(404).json({
+                message: "UPDATE ERR - should never be seen"
+            })
+        }
+
+    } catch (error) {
+        console.log(error.errno);
+         
+        res.status(500).json({
+          error: 'There was an error UPDATING the account from the database',
+        });
+      } 
+
+});
 
 
 // custom  Middleware for verifying id  !!!!
