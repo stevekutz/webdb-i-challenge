@@ -42,6 +42,15 @@ WHERE orderTotals > 0
 GROUP BY City
 ORDER BY City;
 
+## // another way
+SELECT Customers.City, COUNT(Orders.CustomerID) as orderTotals
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerId = Customers.CustomerId
+GROUP BY Customers.City
+ORDER BY Customers.City;
+
+
+
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
 
 // DELETE if  CustomerID DOES NOT EXIST in both Customers and Orders  !!!!
